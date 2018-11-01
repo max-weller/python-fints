@@ -113,13 +113,16 @@ class FinTS3Client:
 
         re_data = re.compile(r'[^@]*@([0-9]+)@(.+)', flags=re.MULTILINE | re.DOTALL)
         statement = []
+        raw_statements = []
         for resp in responses:
             seg = resp._find_segment('HIKAZ')
             if seg:
+                raw_statements = []
                 m = re_data.match(seg)
                 if m:
                     statement += mt940_to_array(m.group(2))
 
+        self.raw_statements = raw_statements
         logger.debug('Statement: {}'.format(statement))
 
         dialog.end()
